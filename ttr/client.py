@@ -14,7 +14,7 @@ class TTRClient(object):
             self.login()
 
     def login(self):
-        self._session.post(self.url, data=json.dumps({'op': 'login', 'user': self.user, 'password': self.password}))
+        r = self._get_json({'op': 'login', 'user': self.user, 'password': self.password})
 
     def logout(self):
         self._get_json({'op': 'logout'})
@@ -39,8 +39,23 @@ class TTRClient(object):
         r = self._get_json({'op': 'getArticle', 'article_id': article_id})
         return [Article(article, self) for article in r['content']]
 
+    def refresh_article(self, article):
+        r = self._get_json({'op': 'getArticle', 'article_id': article.id})
+        article.__init__(r['content'][0], client=self)
+
     def share_to_published(self, title, url, content):
         r = self._get_json({'op': 'shareToPublished', 'title': title, 'url': url, 'content': content})
+
+    def mark_unread(self, article_id):
+        r = self._get_json({'op': 'updateArticle', 'article_ids': article_id, 'mode': 1, 'field': 2})
+
+    def mark_read(self, article_id):
+        r = self._get_json({'op': 'updateArticle', 'article_ids': article_id, 'mode': 0, 'field': 2})
+        pass
+
+    def toggle_unread(self, article_id):
+        r = self._get_json({'op': 'updateArticle', 'article_ids': article_id, 'mode': 2, 'field': 2})
+
 
 class RemoteObject(object):
     def __init__(self, attr, client=None):
@@ -74,4 +89,9 @@ class Headline(RemoteObject):
 class Article(RemoteObject):
     def publish(self):
         self._client.share_to_published(self.title, self.link, self.content)
+
+    def refresh_status(self):
+        self._client.refresh_article(self)
     
+    def toggle_unread(self):
+        self._client.toggle_unread(self.id)

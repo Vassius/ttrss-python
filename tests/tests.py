@@ -141,6 +141,16 @@ class TestArticles(unittest.TestCase):
         l = [headline.link for headline in h]
         self.assertIn(a.link, l)
 
+    def test_toggle_unread(self):
+        a = self.ttr.get_articles(self.h.id)[0]
+        unread = a.unread
+        a.toggle_unread()
+        a.refresh_status()
+        self.assertFalse(unread == a.unread)
+        a.toggle_unread()
+        a.refresh_status()
+        self.assertTrue(unread == a.unread)
+
 
 class TestShare(unittest.TestCase):
     def setUp(self):
@@ -159,6 +169,29 @@ class TestShare(unittest.TestCase):
         h = self.ttr.get_headlines(feed_id=-2)
         l = [headline.link for headline in h]
         self.assertIn(url, l)
+
+class TestUpdate(unittest.TestCase):
+    def setUp(self):
+        self.ttr = get_ttr_client()
+        self.article = self.ttr.get_articles(article_id=1)[0]
+
+    def test_mark_unread(self):
+        if self.article.unread:
+            self.ttr.mark_read(self.article.id)
+            a = self.ttr.get_articles(self.article.id)[0]
+            self.assertFalse(a.unread)
+        else:
+            self.ttr.mark_unread(self.article.id)
+            a = self.ttr.get_articles(self.article.id)[0]
+            self.assertTrue(a.unread)
+
+    def test_toggle_unread(self):
+        a = self.ttr.get_articles(self.article.id)[0]
+        unread = a.unread
+        self.ttr.toggle_unread(a.id)
+        a.refresh_status()
+        self.assertFalse(a.unread == unread)
+
 
 if __name__ == '__main__':
     unittest.main()
