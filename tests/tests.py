@@ -1,9 +1,11 @@
+from datetime import datetime
+import time
 import unittest
 import requests
 import json
 import sys
 sys.path.append('./')
-from ttr.client import TTRClient, Category
+from ttr.client import TTRClient, Category, Feed, Headline, Article
 
 from test_data import TTR_URL, TTR_USER, TTR_PASSWORD
 
@@ -72,12 +74,91 @@ class TestCategories(unittest.TestCase):
         c.title
         c.id
 
+    def test_category_methods(self):
+        c = self.cat[0]
+        f = c.feeds()
+        self.assertIsInstance(f, list)
+        self.assertIsInstance(f[0], Feed)
+
 class TestFeeds(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client()
+        feeds = self.ttr.get_feeds(cat_id=1)
+        self.feed = feeds[0]
 
     def test_get_feeds(self): 
-        feeds = self.ttr.get_feeds()
+        feed = self.feed
+        feed.id
+        feed.title
+        feed.unread
+        self.assertIsInstance(feed.last_updated, datetime)
+
+    def test_get_headlines(self):
+        h = self.feed.headlines()
+        self.assertIsInstance(h, list)
+        self.assertIsInstance(h[0], Headline)
+
+
+class TestHeadlines(unittest.TestCase):
+    def setUp(self):
+        self.ttr = get_ttr_client() 
+        self.feed = self.ttr.get_feeds(cat_id=1)[0]
+
+    def test_get_headlines(self):
+        h = self.ttr.get_headlines(self.feed.id)
+        self.assertIsInstance(h, list)
+        h = h[0]
+        self.assertIsInstance(h, Headline)
+        h.title
+
+    def test_get_article(self):
+        h = self.ttr.get_headlines(self.feed.id)
+        h = h[0]
+        a = h.full_article()
+        self.assertIsInstance(a, Article)
+        self.assertEqual(a.id, h.id)
+        
+class TestArticles(unittest.TestCase):
+    def setUp(self):
+        self.ttr = get_ttr_client()
+        feed = self.ttr.get_feeds(cat_id=1)[0]
+        self.h = feed.headlines()[0]
+        self.assertIsInstance(self.h, Headline)
+        
+    def test_get_article(self):
+        a = self.ttr.get_articles(self.h.id)
+        self.assertIsInstance(a, list)
+        a = a[0]
+        self.assertIsInstance(a, Article)
+        self.assertEqual(a.id, self.h.id)
+
+    def test_publish(self):
+        a = self.ttr.get_articles(self.h.id)
+        self.assertIsInstance(a, list)
+        a = a[0]
+        a.publish()
+        h = self.ttr.get_headlines(feed_id=-2)
+        l = [headline.link for headline in h]
+        self.assertIn(a.link, l)
+
+
+class TestShare(unittest.TestCase):
+    def setUp(self):
+        self.ttr = get_ttr_client()
+
+    def test_get_shared(self):
+        h = self.ttr.get_headlines(feed_id=-2)
+        self.assertIsInstance(h, list)
+        self.assertIsInstance(h[0], Headline)
+
+    def test_share_article(self):
+        title = 'Testing publish' 
+        url = 'http://{0}.com'.format(time.time())
+        content = 'Test content'
+        self.ttr.share_to_published(title, url, content)
+        h = self.ttr.get_headlines(feed_id=-2)
+        l = [headline.link for headline in h]
+        self.assertIn(url, l)
 
 if __name__ == '__main__':
     unittest.main()
