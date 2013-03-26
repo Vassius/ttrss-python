@@ -28,4 +28,13 @@ Usage example:
 
 More detailed API docs coming soon.
 
+Development
+===========
+ttrss-python is still in early development and far from feature complete. But if there's a specific feature
+you'd like me to prioritize, feel free to submit an issue or a pull request. 
+
+Contribution & feedback
+=======================
+Contributions are welcome! Submit a pull request, file a bug report or write some docs if you'd like. 
+Feature requests and other kinds of feedback are also appreciated. 
 
