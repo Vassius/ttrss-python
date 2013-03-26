@@ -6,11 +6,12 @@ import json
 import sys
 sys.path.append('./')
 from ttr.client import TTRClient, Category, Feed, Headline, Article
+from ttr.exceptions import TTRNotLoggedIn, TTRAuthFailure
 
 from test_data import TTR_URL, TTR_USER, TTR_PASSWORD
 
 def get_ttr_client():
-    return TTRClient(TTR_URL, TTR_USER, TTR_PASSWORD)
+    return TTRClient(TTR_URL, user=TTR_USER, password=TTR_PASSWORD, auto_login=True)
 
 def get_ttr_client_nologin():
     s = TTRClient(TTR_URL)
@@ -48,15 +49,22 @@ class TestApi(unittest.TestCase):
 
     def test_logout(self):
         self.ttr.logout()
-        r = self.ttr._get_json({'op': 'getVersion'})
+        r = self.ttr._get_json({'op': 'isLoggedIn'})
         self.assertIsInstance(r, dict)
-        self.assertTrue(r['status'] == 1)
+        self.assertFalse(r['status'])
+        self.assertRaises(TTRNotLoggedIn, self.ttr._get_json, {'op': 'getVersion'})
     
     def test_manual_login(self):
         self.ttr.login()
         r = self.ttr._get_json({'op': 'getVersion'})
         self.assertIsInstance(r, dict)
         self.assertTrue(r['status'] == 0)
+
+    def test_login_error(self):
+        user = self.ttr.user
+        self.ttr.user = ''
+        self.assertRaises(TTRAuthFailure, self.ttr.login)
+        self.ttr.user = user
 
 class TestCategories(unittest.TestCase):
     def setUp(self):
