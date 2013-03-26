@@ -5,8 +5,8 @@ import requests
 import json
 import sys
 sys.path.append('./')
-from ttr.client import TTRClient, Category, Feed, Headline, Article
-from ttr.exceptions import TTRNotLoggedIn, TTRAuthFailure
+from ttrss.client import TTRClient, Category, Feed, Headline, Article
+from ttrss.exceptions import TTRNotLoggedIn, TTRAuthFailure
 
 from test_data import TTR_URL, TTR_USER, TTR_PASSWORD
 
