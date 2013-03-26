@@ -1,12 +1,18 @@
 from distutils.core import setup
 
+with open('README.rst') as f:
+    long_desc = f.read()
+
 setup(
         name='ttrss-python',
         version='0.1',
-        description='A python library for the Tiny Tiny RSS web API',
+        description='A client library for the Tiny Tiny RSS web API',
+        long_description=long_desc,
+        url='https://github.com/Vassius/ttrss-python',
         author='Markus Wiik',
         author_email='markus.wiik@gmail.com',
         packages=['ttrss'],
+        data_files=[('', ['README.rst'])],
         requires=['requests (>=1.1.0)'],
         provides=['ttrss'],
         classifiers=[

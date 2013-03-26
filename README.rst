@@ -6,8 +6,7 @@ Have you ever wanted to write a python application to interface with your Tiny T
 At a glance
 ===========
 
-Getting started is easy! Just download and unpack the source distribution and run ``python setup.py install``
-in the base directory. ``pip install`` capabilities will be added soon. 
+Getting started is easy! Just type ``pip install ttrss-python`` in the virtualenv of your choice. 
 
 Usage example:
 
