@@ -132,6 +132,11 @@ class TestArticles(unittest.TestCase):
         self.assertIsInstance(a, Article)
         self.assertEqual(a.id, self.h.id)
 
+    def test_get_multiple_articles(self):
+        a = self.ttr.get_articles("1,2")
+        self.assertTrue(len(a) == 2)
+
+
     def test_publish(self):
         a = self.ttr.get_articles(self.h.id)
         self.assertIsInstance(a, list)
