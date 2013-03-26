@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 with open('README.rst') as f:
     long_desc = f.read()
@@ -12,8 +12,9 @@ setup(
         author='Markus Wiik',
         author_email='markus.wiik@gmail.com',
         packages=['ttrss'],
-        data_files=[('', ['README.rst'])],
-        requires=['requests (>=1.1.0)'],
+        package_data={'': ['README.rst']},
+        include_package_data=True,
+        install_requires=['requests>=1.1.0'],
         provides=['ttrss'],
         classifiers=[
             'Development Status :: 3 - Alpha',
