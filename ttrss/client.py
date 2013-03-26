@@ -1,26 +1,31 @@
 from datetime import datetime
 import requests
 import json
+from auth import TTRAuth
+from exceptions import raise_on_error
 
 class TTRClient(object):
-    def __init__(self, url, user=None, password=None):
+    def __init__(self, url, user=None, password=None, auto_login=False):
         self.url = url + '/api/'
         self.user = user
         self.password = password
 
         self._session = requests.Session()
 
-        if self.password and self.user:
-            self.login()
+        if auto_login:
+            auth = TTRAuth(user, password)
+            self._session.auth = auth
 
     def login(self):
         r = self._get_json({'op': 'login', 'user': self.user, 'password': self.password})
 
     def logout(self):
         self._get_json({'op': 'logout'})
+        self._session.auth = None
 
     def _get_json(self, post_data):
         r = self._session.post(self.url, data=json.dumps(post_data))
+        raise_on_error(r)
         return json.loads(r.content)
 
     def get_categories(self):
