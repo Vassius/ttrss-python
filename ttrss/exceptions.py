@@ -6,14 +6,22 @@ class TTRAuthFailure(Exception):
 class TTRNotLoggedIn(Exception):
     pass
 
+class TTRApiDisabled(Exception):
+    pass
+
 def raise_on_error(r):
     j = json.loads(r.content)
     if int(j['status']) == 0:
         return
+    
+    error = j['content']['error']
 
-    if j['content']['error'] == 'NOT_LOGGED_IN':
+    if error == 'NOT_LOGGED_IN':
         raise TTRNotLoggedIn
 
-    if j['content']['error'] == 'LOGIN_ERROR':
+    if error == 'LOGIN_ERROR':
         raise TTRAuthFailure
+
+    if error == 'API_DISABLED':
+        raise TTRApiDisabled
 
