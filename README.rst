@@ -25,7 +25,7 @@ Usage example:
     headlines = feed.headlines()
     # etc...
 
-More detailed API docs coming soon.
+More detailed documentation can be found at https://ttrss-python.readthedocs.org/en/latest/
 
 Development
 ===========
