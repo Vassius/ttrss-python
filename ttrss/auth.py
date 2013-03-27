@@ -3,6 +3,7 @@ import requests
 import json
 from exceptions import raise_on_error
 
+
 class TTRAuth(AuthBase):
     def __init__(self, user, password):
         self.user = user
@@ -14,7 +15,11 @@ class TTRAuth(AuthBase):
             return r
 
         s = requests.Session()
-        res = s.post(r.request.url, json.dumps({'op': 'login', 'user': self.user, 'password': self.password}))
+        res = s.post(r.request.url, json.dumps({
+            'op': 'login',
+            'user': self.user,
+            'password': self.password
+        }))
         raise_on_error(res)
 
         _r = s.post(r.request.url, r.request.body)
