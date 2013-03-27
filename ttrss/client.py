@@ -4,23 +4,27 @@ import json
 from auth import TTRAuth
 from exceptions import raise_on_error
 
+
 class TTRClient(object):
     """
-    This is the actual client interface to Tiny Tiny RSS. 
+    This is the actual client interface to Tiny Tiny RSS.
 
-    This object retains a http session with the needed session cookies. From the client you
-    can fetch categories, feeds, headlines and articles, all represented by Python objects. 
-    You can also update modify articles and feeds on the server. 
+    This object retains a http session with the needed session cookies. From
+    the client you can fetch categories, feeds, headlines and articles, all
+    represented by Python objects.  You can also update modify articles and
+    feeds on the server.
     """
     def __init__(self, url, user=None, password=None, auto_login=False):
         """
-        Instantiate a new client. 
+        Instantiate a new client.
 
-        :param url: The full URL to the Tiny Tiny RSS server, *without* the /api/ suffix.
+        :param url: The full URL to the Tiny Tiny RSS server, *without* the
+        /api/ suffix.
         :param user: The username to use when logging in.
         :param password: The password for the user.
-        :param auto_login: *Optional* Automatically login upon instantiation, and re-login
-        when a session cookie expires. 
+        :param auto_login: *Optional* Automatically login upon instantiation,
+        and re-login
+        when a session cookie expires.
         """
         self.url = url + '/api/'
         self.user = user
@@ -35,17 +39,23 @@ class TTRClient(object):
     def login(self):
         """
         Manually log in (i.e. request a session cookie)
-        
-        This method must be used if the client was not instantiated with ``auto_login=True``
+
+        This method must be used if the client was not instantiated with
+        ``auto_login=True``
         """
-        r = self._get_json({'op': 'login', 'user': self.user, 'password': self.password})
+        r = self._get_json({
+            'op': 'login',
+            'user': self.user,
+            'password': self.password
+        })
 
     def logout(self):
         """
         Log out.
 
-        After logging out, ``login()`` must be used to gain a valid session again. Please note that 
-        logging out invalidates any automatic re-login even after logging back in.
+        After logging out, ``login()`` must be used to gain a valid session
+        again. Please note that logging out invalidates any automatic
+        re-login even after logging back in.
         """
         self._get_json({'op': 'logout'})
         self._session.auth = None
@@ -60,15 +70,26 @@ class TTRClient(object):
         r = self._get_json({'op': 'getCategories'})
         return [Category(cat, self) for cat in r['content']]
 
-    def get_feeds(self, cat_id=-1, unread_only=False, limit=0, offset=0, include_nested=False):
+    def get_feeds(
+            self,
+            cat_id=-1,
+            unread_only=False,
+            limit=0,
+            offset=0,
+            include_nested=False):
         """
         Get a list of feeds in a category.
 
-        :param cat_id: Category id. This is available as the ``id`` property of a Category object.
-        :param unread_only: *Optional* Include only feeds containing unread articles. Default is ``False``.
-        :param limit: *Optional* Limit number of included feeds to ``limit``. Default is 0 (unlimited).
-        :param offset: *Optional* Skip this number of feeds. Useful for pagination. Default is 0.
-        :param include_nested: *Optional* Include child categories. Default is ``False``.
+        :param cat_id: Category id. This is available as the ``id`` property
+        of a Category object.
+        :param unread_only: *Optional* Include only feeds containing unread
+        articles. Default is ``False``.
+        :param limit: *Optional* Limit number of included feeds to ``limit``.
+        Default is 0 (unlimited).
+        :param offset: *Optional* Skip this number of feeds. Useful for
+        pagination. Default is 0.
+        :param include_nested: *Optional* Include child categories. Default
+        is ``False``.
         """
         r = self._get_json({'op': 'getFeeds', 'cat_id': cat_id})
         return [Feed(feed, self) for feed in r['content']]
@@ -77,7 +98,8 @@ class TTRClient(object):
         """
         Get a list of headlines from a specified feed.
 
-        :param feed_id: Feed id. This is available as the ``id`` property of a Feed object.
+        :param feed_id: Feed id. This is available as the ``id`` property of
+        a Feed object.
         """
         r = self._get_json({'op': 'getHeadlines', 'feed_id': feed_id})
         return [Headline(hl, self) for hl in r['content']]
@@ -93,9 +115,11 @@ class TTRClient(object):
 
     def refresh_article(self, article):
         """
-        Update all properties of an article object with fresh information from the server.
+        Update all properties of an article object with fresh information from
+        the server.
 
-        Please note that this method alters the original object and does not return a new one.
+        Please note that this method alters the original object and does not
+        return a new one.
 
         :param article: The article to refresh.
         """
@@ -108,9 +132,14 @@ class TTRClient(object):
 
         :param title: Article title.
         :param url: Article url.
-        :param content: Article content. 
+        :param content: Article content.
         """
-        r = self._get_json({'op': 'shareToPublished', 'title': title, 'url': url, 'content': content})
+        r = self._get_json({
+            'op': 'shareToPublished',
+            'title': title,
+            'url': url,
+            'content': content
+        })
 
     def mark_unread(self, article_id):
         """
@@ -118,7 +147,12 @@ class TTRClient(object):
 
         :param article_id: ID of article to mark as unread.
         """
-        r = self._get_json({'op': 'updateArticle', 'article_ids': article_id, 'mode': 1, 'field': 2})
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 2
+        })
 
     def mark_read(self, article_id):
         """
@@ -126,7 +160,12 @@ class TTRClient(object):
 
         :param article_id: ID of article to mark as read.
         """
-        r = self._get_json({'op': 'updateArticle', 'article_ids': article_id, 'mode': 0, 'field': 2})
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 0,
+            'field': 2
+        })
         pass
 
     def toggle_unread(self, article_id):
@@ -135,21 +174,27 @@ class TTRClient(object):
 
         :param article_id: ID of the article to toggle.
         """
-        r = self._get_json({'op': 'updateArticle', 'article_ids': article_id, 'mode': 2, 'field': 2})
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 2,
+            'field': 2
+        })
 
 
 class RemoteObject(object):
     def __init__(self, attr, client=None):
         self._client = client
-        for key,value in attr.items():
+        for key, value in attr.items():
             if key == 'id':
                 value = int(value)
             self.__setattr__(key, value)
 
-    
+
 class Category(RemoteObject):
     def feeds(self, **kwargs):
         return self._client.get_feeds(cat_id=self.id, **kwargs)
+
 
 class Feed(RemoteObject):
     def __init__(self, attr, client):
@@ -162,10 +207,12 @@ class Feed(RemoteObject):
     def headlines(self):
         return self._client.get_headlines(feed_id=self.id)
 
+
 class Headline(RemoteObject):
     def full_article(self):
         r = self._client.get_articles(self.id)
         return r[0]
+
 
 class Article(RemoteObject):
     def publish(self):
@@ -173,6 +220,6 @@ class Article(RemoteObject):
 
     def refresh_status(self):
         self._client.refresh_article(self)
-    
+
     def toggle_unread(self):
         self._client.toggle_unread(self.id)
