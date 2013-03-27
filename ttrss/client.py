@@ -23,7 +23,7 @@ class TTRClient(object):
         :param user: The username to use when logging in.
         :param password: The password for the user.
         :param auto_login: *Optional* Automatically login upon instantiation,
-        and re-login
+            and re-login
         when a session cookie expires.
         """
         self.url = url + '/api/'
@@ -81,15 +81,15 @@ class TTRClient(object):
         Get a list of feeds in a category.
 
         :param cat_id: Category id. This is available as the ``id`` property
-        of a Category object.
+            of a Category object.
         :param unread_only: *Optional* Include only feeds containing unread
-        articles. Default is ``False``.
+            articles. Default is ``False``.
         :param limit: *Optional* Limit number of included feeds to ``limit``.
-        Default is 0 (unlimited).
+            Default is 0 (unlimited).
         :param offset: *Optional* Skip this number of feeds. Useful for
-        pagination. Default is 0.
+            pagination. Default is 0.
         :param include_nested: *Optional* Include child categories. Default
-        is ``False``.
+            is ``False``.
         """
         r = self._get_json({'op': 'getFeeds', 'cat_id': cat_id})
         return [Feed(feed, self) for feed in r['content']]
@@ -99,7 +99,7 @@ class TTRClient(object):
         Get a list of headlines from a specified feed.
 
         :param feed_id: Feed id. This is available as the ``id`` property of
-        a Feed object.
+            a Feed object.
         """
         r = self._get_json({'op': 'getHeadlines', 'feed_id': feed_id})
         return [Headline(hl, self) for hl in r['content']]
