@@ -15,8 +15,8 @@ class TTRAuth(AuthBase):
             return r
 
         sid = None
-        if r.headers['set-cookie']:
-            sid = r.headers['set-cookie'].split(';')[0].split('=')[1]
+        if 'ttrss_api_sid' in r.cookies:
+            sid = r.cookies['ttrss_api_sid']
             r.request.headers['Cookie'] = 'ttrss_api_sid={0}'.format(sid)
         else:
             sid = r.request.headers['Cookie'].split('=')[1]
