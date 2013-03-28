@@ -44,11 +44,15 @@ class TestApi(unittest.TestCase):
 
     def test_auto_login(self):
         r = self.ttr._get_json({'op': 'getVersion'})
-        self.assertIsInstance(r, dict)
         self.assertTrue(r['status'] == 0)
+        r = self.ttr._get_json({'op': 'isLoggedIn'})
+        self.assertIsInstance(r, dict)
+        self.assertTrue(r['content']['status'])
 
     def test_logout(self):
         self.ttr.logout()
+        r = self.ttr.logged_in()
+        self.assertFalse(r)
         r = self.ttr._get_json({'op': 'isLoggedIn'})
         self.assertIsInstance(r, dict)
         self.assertFalse(r['status'])

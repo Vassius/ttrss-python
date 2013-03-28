@@ -60,6 +60,10 @@ class TTRClient(object):
         self._get_json({'op': 'logout'})
         self._session.auth = None
 
+    def logged_in(self):
+        r = self._get_json({'op': 'isLoggedIn'})
+        return r['content']['status']
+
     def _get_json(self, post_data):
         r = self._session.post(self.url, data=json.dumps(post_data))
         raise_on_error(r)
