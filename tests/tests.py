@@ -4,7 +4,7 @@ import unittest
 import requests
 import json
 import sys
-sys.path.append('./')
+sys.path.insert(0, './')
 from ttrss.client import TTRClient, Category, Feed, Headline, Article
 from ttrss.exceptions import TTRNotLoggedIn, TTRAuthFailure
 
@@ -65,6 +65,10 @@ class TestApi(unittest.TestCase):
         self.ttr.user = ''
         self.assertRaises(TTRAuthFailure, self.ttr.login)
         self.ttr.user = user
+
+    def test_unread_count(self):
+        r = self.ttr.get_unread_count()
+        self.assertIsInstance(r, int)
 
 class TestCategories(unittest.TestCase):
     def setUp(self):

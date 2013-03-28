@@ -65,6 +65,11 @@ class TTRClient(object):
         raise_on_error(r)
         return json.loads(r.content)
 
+    def get_unread_count(self):
+        """Get total number of unread articles"""
+        r = self._get_json({'op': 'getUnread'})
+        return int(r['content']['unread'])
+
     def get_categories(self):
         """Get a list of all available categories"""
         r = self._get_json({'op': 'getCategories'})
