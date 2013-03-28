@@ -82,9 +82,29 @@ class TTRClient(object):
                 return int(c['counter'])
         return None
 
-    def get_categories(self):
-        """Get a list of all available categories"""
-        r = self._get_json({'op': 'getCategories'})
+    def get_categories(
+            self, 
+            unread_only=False,
+            enable_nested=False,
+            include_empty=False
+        ):
+        """
+        Get a list of all available categories
+        
+        :param unread_only: Only return categories containing unread articles.
+            Defaults to ``False``.
+        :param enable_nested: When enabled, traverse through sub-categories
+            and return only the **topmost** categories in a flat list.
+            Defaults to ``False``. 
+        :param include_empty: Include categories not containing any feeds.
+            Defaults to ``False``. *Requires server version 1.7.6*
+        """
+        r = self._get_json({
+            'op': 'getCategories',
+            'unread_only': unread_only,
+            'enable_nested': enable_nested,
+            'include_empty': include_empty
+        })
         return [Category(cat, self) for cat in r['content']]
 
     def get_feeds(
