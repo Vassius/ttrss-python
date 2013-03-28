@@ -15,7 +15,7 @@ def get_ttr_client():
 
 def get_ttr_client_nologin():
     s = TTRClient(TTR_URL)
-    s.username = TTR_USER
+    s.user = TTR_USER
     s.password = TTR_PASSWORD
     return s
 
@@ -32,9 +32,9 @@ class TestRSSService(unittest.TestCase):
         self.assertTrue(r.status_code == 200)
 
     def test_login(self):
-        self.s.username
+        self.s.user
         self.s.password
-        r = requests.post(self.s.url, data=json.dumps({'op': 'login', 'user': self.s.username, 'password': self.s.password}))
+        r = requests.post(self.s.url, data=json.dumps({'op': 'login', 'user': self.s.user, 'password': self.s.password}))
         data = json.loads(r.content)
         self.assertTrue(data['status'] == 0)
 
@@ -72,7 +72,8 @@ class TestApi(unittest.TestCase):
 
 class TestCategories(unittest.TestCase):
     def setUp(self):
-        self.ttr = get_ttr_client()
+        self.ttr = get_ttr_client_nologin()
+        self.ttr.login()
         self.cat = self.ttr.get_categories()
 
     def test_get_categories(self):
@@ -94,7 +95,8 @@ class TestCategories(unittest.TestCase):
 
 class TestFeeds(unittest.TestCase):
     def setUp(self):
-        self.ttr = get_ttr_client()
+        self.ttr = get_ttr_client_nologin()
+        self.ttr.login()
         feeds = self.ttr.get_feeds(cat_id=1)
         self.feed = feeds[0]
 
@@ -117,19 +119,19 @@ class TestFeeds(unittest.TestCase):
 
 class TestHeadlines(unittest.TestCase):
     def setUp(self):
-        self.ttr = get_ttr_client() 
+        self.ttr = get_ttr_client_nologin() 
+        self.ttr.login()
         self.feed = self.ttr.get_feeds(cat_id=1)[0]
+        self.h = self.ttr.get_headlines(self.feed.id)
 
     def test_get_headlines(self):
-        h = self.ttr.get_headlines(self.feed.id)
-        self.assertIsInstance(h, list)
-        h = h[0]
+        self.assertIsInstance(self.h, list)
+        h = self.h[0]
         self.assertIsInstance(h, Headline)
         h.title
 
     def test_get_article(self):
-        h = self.ttr.get_headlines(self.feed.id)
-        h = h[0]
+        h = self.h[0]
         a = h.full_article()
         self.assertIsInstance(a, Article)
         self.assertEqual(a.id, h.id)
@@ -137,15 +139,16 @@ class TestHeadlines(unittest.TestCase):
 
 class TestArticles(unittest.TestCase):
     def setUp(self):
-        self.ttr = get_ttr_client()
+        self.ttr = get_ttr_client_nologin()
+        self.ttr.login()
         feed = self.ttr.get_feeds(cat_id=1)[0]
         self.h = feed.headlines()[0]
         self.assertIsInstance(self.h, Headline)
+        self.a = self.ttr.get_articles(self.h.id)
         
     def test_get_article(self):
-        a = self.ttr.get_articles(self.h.id)
-        self.assertIsInstance(a, list)
-        a = a[0]
+        self.assertIsInstance(self.a, list)
+        a = self.a[0]
         self.assertIsInstance(a, Article)
         self.assertEqual(a.id, self.h.id)
 
@@ -154,16 +157,15 @@ class TestArticles(unittest.TestCase):
         self.assertTrue(len(a) == 2)
 
     def test_publish(self):
-        a = self.ttr.get_articles(self.h.id)
-        self.assertIsInstance(a, list)
-        a = a[0]
+        self.assertIsInstance(self.a, list)
+        a = self.a[0]
         a.publish()
         h = self.ttr.get_headlines(feed_id=-2)
         l = [headline.link for headline in h]
         self.assertIn(a.link, l)
 
     def test_toggle_unread(self):
-        a = self.ttr.get_articles(self.h.id)[0]
+        a = self.a[0]
         unread = a.unread
         a.toggle_unread()
         a.refresh_status()
@@ -175,7 +177,8 @@ class TestArticles(unittest.TestCase):
 
 class TestShare(unittest.TestCase):
     def setUp(self):
-        self.ttr = get_ttr_client()
+        self.ttr = get_ttr_client_nologin()
+        self.ttr.login()
 
     def test_get_shared(self):
         h = self.ttr.get_headlines(feed_id=-2)
@@ -193,7 +196,8 @@ class TestShare(unittest.TestCase):
 
 class TestUpdate(unittest.TestCase):
     def setUp(self):
-        self.ttr = get_ttr_client()
+        self.ttr = get_ttr_client_nologin()
+        self.ttr.login()
         self.article = self.ttr.get_articles(article_id=1)[0]
 
     def test_mark_unread(self):
