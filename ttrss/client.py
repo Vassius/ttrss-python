@@ -230,6 +230,18 @@ class RemoteObject(object):
 
 class Category(RemoteObject):
     def feeds(self, **kwargs):
+        """
+        Get a list of feeds for this category.
+
+        :param unread_only: *Optional* Include only feeds containing unread
+            articles. Default is ``False``.
+        :param limit: *Optional* Limit number of included feeds to ``limit``.
+            Default is 0 (unlimited).
+        :param offset: *Optional* Skip this number of feeds. Useful for
+            pagination. Default is 0.
+        :param include_nested: *Optional* Include child categories. Default
+            is ``False``.
+        """
         return self._client.get_feeds(cat_id=self.id, **kwargs)
 
 
