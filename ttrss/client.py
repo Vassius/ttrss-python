@@ -70,6 +70,14 @@ class TTRClient(object):
         r = self._get_json({'op': 'getUnread'})
         return int(r['content']['unread'])
 
+    def get_feed_count(self):
+        """Get total number of subscribed feeds."""
+        r = self._get_json({'op': 'getCounters'})
+        for c in r['content']:
+            if c['id'] == u'subscribed-feeds':
+                return int(c['counter'])
+        return None
+
     def get_categories(self):
         """Get a list of all available categories"""
         r = self._get_json({'op': 'getCategories'})

@@ -110,6 +110,10 @@ class TestFeeds(unittest.TestCase):
         self.assertIsInstance(h, list)
         self.assertIsInstance(h[0], Headline)
 
+    def test_get_feed_count(self):
+        f = self.ttr.get_feed_count()
+        self.assertIsInstance(f, int)
+
 
 class TestHeadlines(unittest.TestCase):
     def setUp(self):
@@ -130,6 +134,7 @@ class TestHeadlines(unittest.TestCase):
         self.assertIsInstance(a, Article)
         self.assertEqual(a.id, h.id)
         
+
 class TestArticles(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client()
@@ -147,7 +152,6 @@ class TestArticles(unittest.TestCase):
     def test_get_multiple_articles(self):
         a = self.ttr.get_articles("1,2")
         self.assertTrue(len(a) == 2)
-
 
     def test_publish(self):
         a = self.ttr.get_articles(self.h.id)
