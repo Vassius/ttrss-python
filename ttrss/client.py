@@ -131,14 +131,55 @@ class TTRClient(object):
         r = self._get_json({'op': 'getFeeds', 'cat_id': cat_id})
         return [Feed(feed, self) for feed in r['content']]
 
-    def get_headlines(self, feed_id=0):
+    def get_headlines(
+            self,
+            feed_id=-4,
+            limit=0,
+            skip=0,
+            is_cat=False,
+            show_excerpt=True,
+            show_content=False,
+            view_mode=None,
+            include_attachments=False,
+            since_id=None,
+            include_nested=True,
+        ):
+
         """
         Get a list of headlines from a specified feed.
 
         :param feed_id: Feed id. This is available as the ``id`` property of
-            a Feed object.
+            a Feed object. Default is ``-4`` (all feeds).
+        :param limit: Return no more than this number of headlines. Default is
+            ``0`` (unlimited, though the server limits to 60).
+        :param skip: Skip this number of headlines. Useful for pagination.
+            Default is ``0``.
+        :param is_cat: The feed_id is a category. Defaults to ``False``.
+        :param show_excerpt: Include a short excerpt of the article. Defaults
+            to ``True``.
+        :param show_content: Include full article content. Defaults to 
+            ``False``.
+        :param view_mode: (string = all_articles, unread, adaptive, marked,
+            updated)
+        :param include_attachments: include article attachments. Defaults to
+            ``False``.
+        :param since_id: Only include headlines newer than ``since_id``.
+        :param include_nested: Include articles from child categories.
+            Defaults to ``True``.
         """
-        r = self._get_json({'op': 'getHeadlines', 'feed_id': feed_id})
+        r = self._get_json({
+            'op': 'getHeadlines',
+            'feed_id': feed_id,
+            'limit': limit,
+            'skip': skip,
+            'is_cat': is_cat,
+            'show_excerpt': show_excerpt,
+            'show_content': show_content,
+            'view_mode': view_mode,
+            'include_attachments': include_attachments,
+            'since_id': since_id,
+            'include_nested': include_nested,
+        })
         return [Headline(hl, self) for hl in r['content']]
 
     def get_articles(self, article_id):
@@ -253,8 +294,27 @@ class Feed(RemoteObject):
         except AttributeError:
             pass
 
-    def headlines(self):
-        return self._client.get_headlines(feed_id=self.id)
+    def headlines(self, **kwargs):
+        """
+        Get a list of headlines from a this feed.
+
+        :param limit: Return no more than this number of headlines. Default is
+            ``0`` (unlimited, though the server limits to 60).
+        :param skip: Skip this number of headlines. Useful for pagination.
+            Default is ``0``.
+        :param show_excerpt: Include a short excerpt of the article. Defaults
+            to ``True``.
+        :param show_content: Include full article content. Defaults to 
+            ``False``.
+        :param view_mode: (string = all_articles, unread, adaptive, marked,
+            updated)
+        :param include_attachments: include article attachments. Defaults to
+            ``False``.
+        :param since_id: Only include headlines newer than ``since_id``.
+        :param include_nested: Include articles from child categories.
+            Defaults to ``True``.
+        """
+        return self._client.get_headlines(feed_id=self.id, **kwargs)
 
 
 class Headline(RemoteObject):

@@ -114,7 +114,10 @@ class TestFeeds(unittest.TestCase):
     def test_get_headlines(self):
         h = self.feed.headlines()
         self.assertIsInstance(h, list)
+        self.assertTrue(len(h) > 1)
         self.assertIsInstance(h[0], Headline)
+        h_limited = self.feed.headlines(limit=len(h)-1)
+        self.assertEqual(1, len(h) - len(h_limited))
 
     def test_get_feed_count(self):
         f = self.ttr.get_feed_count()
@@ -132,6 +135,9 @@ class TestHeadlines(unittest.TestCase):
         self.assertIsInstance(self.h, list)
         h = self.h[0]
         self.assertIsInstance(h, Headline)
+        self.assertTrue(len(self.h) > 1)
+        limited_h = self.ttr.get_headlines(self.feed.id, limit=len(self.h)-1)
+        self.assertEqual(len(self.h) - len(limited_h), 1)
         h.title
 
     def test_get_article(self):
