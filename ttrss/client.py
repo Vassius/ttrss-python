@@ -318,7 +318,11 @@ class Feed(RemoteObject):
 
 
 class Headline(RemoteObject):
+    """This class represents Headline objects. A headline is a short version
+        of an article. 
+    """
     def full_article(self):
+        """Get the full article corresponding to this headline"""
         r = self._client.get_articles(self.id)
         return r[0]
 
@@ -328,6 +332,7 @@ class Article(RemoteObject):
         self._client.share_to_published(self.title, self.link, self.content)
 
     def refresh_status(self):
+        """Refresh this object with new data fetched from the server."""
         self._client.refresh_article(self)
 
     def toggle_unread(self):
