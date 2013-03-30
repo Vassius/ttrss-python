@@ -261,6 +261,9 @@ class TTRClient(object):
 
 
 class RemoteObject(object):
+    """
+    This is the base class for representing remote resources as Python objects.
+    """
     def __init__(self, attr, client=None):
         self._client = client
         for key, value in attr.items():
@@ -329,6 +332,7 @@ class Headline(RemoteObject):
 
 class Article(RemoteObject):
     def publish(self):
+        """Share this article to published feed"""
         self._client.share_to_published(self.title, self.link, self.content)
 
     def refresh_status(self):
@@ -336,4 +340,5 @@ class Article(RemoteObject):
         self._client.refresh_article(self)
 
     def toggle_unread(self):
+        """Toggle unread status of this article"""
         self._client.toggle_unread(self.id)
