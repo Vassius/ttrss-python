@@ -95,7 +95,7 @@ Headlines are short versions of articles. They too include all useful metadata::
     >>> headline.link
     u'http://www.macrumors.com/2013/03/23/apple-acquires-indoor-mobile-location-positioning-firm-wifislam-for-20-million/'
     >>> headline.updated
-    1364082360      # TODO: Convert to datetime object
+    datetime.datetime(2013, 3, 24, 21, 18, 29)
     >>> headline.unread
     True
     >>> headline.tags
@@ -123,7 +123,7 @@ Article objects include all the useful information::
     >>> article.title
     u'Apple Acquires Indoor Mobile Location Positioning Firm WifiSLAM for $20 Million'
     >>> article.updated
-    1364082360      # TODO: Convert to datetime object
+    datetime.datetime(2013, 3, 24, 21, 18, 29)
     >>> article.comments
     u''
     >>> article.author
