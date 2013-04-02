@@ -101,7 +101,8 @@ class TestFeeds(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client_nologin()
         self.ttr.login()
-        feeds = self.ttr.get_feeds(cat_id=1)
+        cat = self.ttr.get_categories()[-1]
+        feeds = self.ttr.get_feeds(cat.id)
         self.feed = feeds[0]
 
     def test_get_feeds(self): 
@@ -128,7 +129,8 @@ class TestHeadlines(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client_nologin() 
         self.ttr.login()
-        self.feed = self.ttr.get_feeds(cat_id=1)[0]
+        cat = self.ttr.get_categories()[-1]
+        self.feed = self.ttr.get_feeds(cat.id)[0]
         self.h = self.ttr.get_headlines(self.feed.id)
 
     def test_get_headlines(self):
@@ -151,8 +153,10 @@ class TestArticles(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client_nologin()
         self.ttr.login()
-        feed = self.ttr.get_feeds(cat_id=1)[0]
-        self.h = feed.headlines()[0]
+        cat = self.ttr.get_categories()[-1]
+        feed = self.ttr.get_feeds(cat.id)[0]
+        self.headlines = feed.headlines()
+        self.h = self.headlines[0]
         self.assertIsInstance(self.h, Headline)
         self.a = self.ttr.get_articles(self.h.id)
         
@@ -163,7 +167,8 @@ class TestArticles(unittest.TestCase):
         self.assertEqual(a.id, self.h.id)
 
     def test_get_multiple_articles(self):
-        a = self.ttr.get_articles("1,2")
+        h = self.headlines[-2:]
+        a = self.ttr.get_articles("{0},{1}".format(h[0].id, h[1].id))
         self.assertTrue(len(a) == 2)
 
     def test_publish(self):
@@ -183,6 +188,10 @@ class TestArticles(unittest.TestCase):
         a.toggle_unread()
         a.refresh_status()
         self.assertTrue(unread == a.unread)
+
+    def test_updated_timestamp(self):
+        a = self.a[0]
+        self.assertIsInstance(a.updated, datetime)
 
 
 class TestShare(unittest.TestCase):
@@ -208,7 +217,10 @@ class TestUpdate(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client_nologin()
         self.ttr.login()
-        self.article = self.ttr.get_articles(article_id=1)[0]
+        cat = self.ttr.get_categories()[1]
+        feed = cat.feeds()[-1]
+        self.article = feed.headlines()[-1].full_article()
+#        self.article = self.ttr.get_articles()[-1]
 
     def test_mark_unread(self):
         if self.article.unread:

@@ -324,6 +324,12 @@ class Headline(RemoteObject):
     """This class represents Headline objects. A headline is a short version
         of an article. 
     """
+    def __init__(self, attr, client):
+        super(Headline, self).__init__(attr, client)
+        try:
+            self.updated = datetime.fromtimestamp(self.updated)
+        except AttributeError:
+            pass
     def full_article(self):
         """Get the full article corresponding to this headline"""
         r = self._client.get_articles(self.id)
@@ -331,6 +337,12 @@ class Headline(RemoteObject):
 
 
 class Article(RemoteObject):
+    def __init__(self, attr, client):
+        super(Article, self).__init__(attr, client)
+        try:
+            self.updated = datetime.fromtimestamp(self.updated)
+        except AttributeError:
+            pass
     def publish(self):
         """Share this article to published feed"""
         self._client.share_to_published(self.title, self.link, self.content)
