@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
         name='ttrss-python',
-        version='0.1.2',
+        version='0.1.3',
         description='A client library for the Tiny Tiny RSS web API',
         long_description=long_desc,
         url='https://github.com/Vassius/ttrss-python',
