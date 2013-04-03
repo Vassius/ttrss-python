@@ -124,6 +124,10 @@ class TestFeeds(unittest.TestCase):
         f = self.ttr.get_feed_count()
         self.assertIsInstance(f, int)
 
+    def test_feed_catchup(self):
+        self.assertTrue(self.feed.unread > 0)
+        # TODO    
+
 
 class TestHeadlines(unittest.TestCase):
     def setUp(self):
