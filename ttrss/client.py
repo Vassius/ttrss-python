@@ -259,6 +259,15 @@ class TTRClient(object):
             'field': 2
         })
 
+    def catchup_feed(self, feed_id, is_cat=False):
+        """
+        Attempt to mark all articles in specified feed as read.
+        
+        :param feed_id: id of the feed to catchup.
+        :param is_cat: Specified feed is a category. Default is False.
+        """
+        r = self._get_json({'op': 'catchupFeed', 'feed_id': feed_id, 'is_cat': is_cat})
+
 
 class RemoteObject(object):
     """
