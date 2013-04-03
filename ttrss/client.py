@@ -306,6 +306,10 @@ class Feed(RemoteObject):
         except AttributeError:
             pass
 
+    def catchup(self):
+        """Mark this feed as read"""
+        self._client.catchup_feed(self.id)
+
     def headlines(self, **kwargs):
         """
         Get a list of headlines from a this feed.
