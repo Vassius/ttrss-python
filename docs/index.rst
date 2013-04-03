@@ -150,6 +150,18 @@ you have a long-running script and interact with the server by other means while
     >>> article.unread
     False
 
+Development
+===========
+This project is open source and MIT licensed. The source code is available at https://github.com/Vassius/ttrss-python
+
+Contributions
+-------------
+Bugreports, feature requests and other feedback is very much appreciated, and best submitted in the GitHub project mentioned above. 
+If you're a doer and want to patch something yourself - Awesome! Just fork my repo and submit a pull request. 
+
+Author
+------
+``ttrss-python`` is written and maintained by Markus Wiik <vassius@gmail.com>
 
 API Documentation
 =================
