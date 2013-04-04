@@ -67,7 +67,10 @@ class TTRClient(object):
         return r['content']['status']
 
     def _get_json(self, post_data):
-        data = {'sid': self.sid}
+        if post_data['op'] == 'login':
+            data = {}
+        else:
+            data = {'sid': self.sid}
         data.update(post_data)
         r = self._session.post(self.url, data=json.dumps(data))
         raise_on_error(r)

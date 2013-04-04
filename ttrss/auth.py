@@ -8,34 +8,41 @@ class TTRAuth(AuthBase):
     def __init__(self, user, password):
         self.user = user
         self.password = password
+        self.sid = None
 
     def response_hook(self, r, **kwargs):
         j = json.loads(r.content)
         if int(j['status']) == 0:
             return r
 
-        sid = None
-        if 'ttrss_api_sid' in r.cookies:
-            sid = r.cookies['ttrss_api_sid']
-            r.request.headers['Cookie'] = 'ttrss_api_sid={0}'.format(sid)
-        else:
-            sid = r.request.headers['Cookie'].split('=')[1]
-
-        res = requests.post(r.request.url, json.dumps({
-            'sid': sid,
-            'op': 'login',
-            'user': self.user,
-            'password': self.password
-        }))
-        raise_on_error(res)
+        self.sid = self._get_sid(r.request.url)
 
         r.request.deregister_hook('response', self.response_hook)
+        j = json.loads(r.request.body)
+        j.update({'sid': self.sid})
+        r.request.body = json.dumps(j)
         _r = requests.Session().send(r.request)
-        _r.cookies = r.cookies
         raise_on_error(_r)
 
         return _r
 
     def __call__(self, r):
         r.register_hook('response', self.response_hook)
-        return r
+        if self.sid is None:
+            self.sid = self._get_sid(r.url)
+            
+        data = json.loads(r.body)
+        data.update({'sid': self.sid})
+        req = requests.Request('POST', r.url)
+        req.data = json.dumps(data)
+        return req.prepare()
+
+    def _get_sid(self, url):
+        res = requests.post(url, data=json.dumps({
+            'op': 'login',
+            'user': self.user,
+            'password': self.password
+        }))
+        raise_on_error(res)
+        j = json.loads(res.content)
+        return j['content']['session_id']
