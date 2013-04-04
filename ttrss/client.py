@@ -26,6 +26,7 @@ class TTRClient(object):
             and re-login
         when a session cookie expires.
         """
+        self.sid = None
         self.url = url + '/api/'
         self.user = user
         self.password = password
@@ -48,6 +49,7 @@ class TTRClient(object):
             'user': self.user,
             'password': self.password
         })
+        self.sid = r['content']['session_id']
 
     def logout(self):
         """
@@ -65,7 +67,9 @@ class TTRClient(object):
         return r['content']['status']
 
     def _get_json(self, post_data):
-        r = self._session.post(self.url, data=json.dumps(post_data))
+        data = {'sid': self.sid}
+        data.update(post_data)
+        r = self._session.post(self.url, data=json.dumps(data))
         raise_on_error(r)
         return json.loads(r.content)
 
