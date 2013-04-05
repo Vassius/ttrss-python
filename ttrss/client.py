@@ -90,19 +90,18 @@ class TTRClient(object):
         return None
 
     def get_categories(
-            self, 
+            self,
             unread_only=False,
             enable_nested=False,
-            include_empty=False
-        ):
+            include_empty=False):
         """
         Get a list of all available categories
-        
+
         :param unread_only: Only return categories containing unread articles.
             Defaults to ``False``.
         :param enable_nested: When enabled, traverse through sub-categories
             and return only the **topmost** categories in a flat list.
-            Defaults to ``False``. 
+            Defaults to ``False``.
         :param include_empty: Include categories not containing any feeds.
             Defaults to ``False``. *Requires server version 1.7.6*
         """
@@ -149,8 +148,7 @@ class TTRClient(object):
             view_mode=None,
             include_attachments=False,
             since_id=None,
-            include_nested=True,
-        ):
+            include_nested=True):
 
         """
         Get a list of headlines from a specified feed.
@@ -164,7 +162,7 @@ class TTRClient(object):
         :param is_cat: The feed_id is a category. Defaults to ``False``.
         :param show_excerpt: Include a short excerpt of the article. Defaults
             to ``True``.
-        :param show_content: Include full article content. Defaults to 
+        :param show_content: Include full article content. Defaults to
             ``False``.
         :param view_mode: (string = all_articles, unread, adaptive, marked,
             updated)
@@ -269,11 +267,15 @@ class TTRClient(object):
     def catchup_feed(self, feed_id, is_cat=False):
         """
         Attempt to mark all articles in specified feed as read.
-        
+
         :param feed_id: id of the feed to catchup.
         :param is_cat: Specified feed is a category. Default is False.
         """
-        r = self._get_json({'op': 'catchupFeed', 'feed_id': feed_id, 'is_cat': is_cat})
+        r = self._get_json({
+            'op': 'catchupFeed',
+            'feed_id': feed_id,
+            'is_cat': is_cat
+        })
 
 
 class RemoteObject(object):
@@ -327,7 +329,7 @@ class Feed(RemoteObject):
             Default is ``0``.
         :param show_excerpt: Include a short excerpt of the article. Defaults
             to ``True``.
-        :param show_content: Include full article content. Defaults to 
+        :param show_content: Include full article content. Defaults to
             ``False``.
         :param view_mode: (string = all_articles, unread, adaptive, marked,
             updated)
@@ -342,7 +344,7 @@ class Feed(RemoteObject):
 
 class Headline(RemoteObject):
     """This class represents Headline objects. A headline is a short version
-        of an article. 
+        of an article.
     """
     def __init__(self, attr, client):
         super(Headline, self).__init__(attr, client)
@@ -350,6 +352,7 @@ class Headline(RemoteObject):
             self.updated = datetime.fromtimestamp(self.updated)
         except AttributeError:
             pass
+
     def full_article(self):
         """Get the full article corresponding to this headline"""
         r = self._client.get_articles(self.id)
@@ -363,6 +366,7 @@ class Article(RemoteObject):
             self.updated = datetime.fromtimestamp(self.updated)
         except AttributeError:
             pass
+
     def publish(self):
         """Share this article to published feed"""
         self._client.share_to_published(self.title, self.link, self.content)
