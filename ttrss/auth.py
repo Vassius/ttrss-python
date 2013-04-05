@@ -20,8 +20,9 @@ class TTRAuth(AuthBase):
         r.request.deregister_hook('response', self.response_hook)
         j = json.loads(r.request.body)
         j.update({'sid': self.sid})
-        r.request.body = json.dumps(j)
-        _r = requests.Session().send(r.request)
+        req = requests.Request('POST', r.request.url)
+        req.data = json.dumps(j)
+        _r = requests.Session().send(req.prepare)
         raise_on_error(_r)
 
         return _r
