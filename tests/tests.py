@@ -59,6 +59,8 @@ class TestApi(unittest.TestCase):
         self.assertRaises(TTRNotLoggedIn, self.ttr._get_json, {'op': 'getVersion'})
     
     def test_manual_login(self):
+        if self.ttr.logged_in():
+            self.ttr.logout()
         self.ttr.login()
         r = self.ttr._get_json({'op': 'getVersion'})
         self.assertIsInstance(r, dict)
