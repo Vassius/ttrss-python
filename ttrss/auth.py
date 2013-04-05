@@ -29,15 +29,17 @@ class TTRAuth(AuthBase):
 
     def __call__(self, r):
         r.register_hook('response', self.response_hook)
-        if self.sid is None:
-            self.sid = self._get_sid(r.url)
             
         data = json.loads(r.body)
         if 'sid' not in data:
+            if self.sid is None:
+                self.sid = self._get_sid(r.url)
             data.update({'sid': self.sid})
             req = requests.Request('POST', r.url)
             req.data = json.dumps(data)
             return req.prepare()
+        else:
+            self.sid = data['sid']
         return r
 
     def _get_sid(self, url):
