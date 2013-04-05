@@ -22,7 +22,7 @@ class TTRAuth(AuthBase):
         j.update({'sid': self.sid})
         req = requests.Request('POST', r.request.url)
         req.data = json.dumps(j)
-        _r = requests.Session().send(req.prepare)
+        _r = requests.Session().send(req.prepare())
         raise_on_error(_r)
 
         return _r
@@ -33,10 +33,12 @@ class TTRAuth(AuthBase):
             self.sid = self._get_sid(r.url)
             
         data = json.loads(r.body)
-        data.update({'sid': self.sid})
-        req = requests.Request('POST', r.url)
-        req.data = json.dumps(data)
-        return req.prepare()
+        if 'sid' not in data:
+            data.update({'sid': self.sid})
+            req = requests.Request('POST', r.url)
+            req.data = json.dumps(data)
+            return req.prepare()
+        return r
 
     def _get_sid(self, url):
         res = requests.post(url, data=json.dumps({
