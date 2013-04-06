@@ -134,7 +134,14 @@ class TTRClient(object):
         :param include_nested: *Optional* Include child categories. Default
             is ``False``.
         """
-        r = self._get_json({'op': 'getFeeds', 'cat_id': cat_id})
+        r = self._get_json({
+            'op': 'getFeeds',
+            'cat_id': cat_id,
+            'unread_only': unread_only,
+            'limit': limit,
+            'offset': offset,
+            'include_nested': include_nested
+        })
         return [Feed(feed, self) for feed in r['content']]
 
     def get_headlines(
