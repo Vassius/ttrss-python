@@ -130,6 +130,10 @@ class TestFeeds(unittest.TestCase):
         self.assertTrue(self.feed.unread > 0)
         # TODO    
 
+    def test_get_num_feeds(self):
+        n = self.ttr.get_feed_count()
+        self.assertTrue(n > 0)
+
 
 class TestHeadlines(unittest.TestCase):
     def setUp(self):
