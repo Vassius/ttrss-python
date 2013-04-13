@@ -287,6 +287,11 @@ class TTRClient(object):
             'is_cat': is_cat
         })
 
+    def get_feed_count(self):
+        """Return total number of feeds"""
+        r = self._get_json({'op': 'getConfig'})
+        return int(r['content']['num_feeds'])
+
 
 class RemoteObject(object):
     """
