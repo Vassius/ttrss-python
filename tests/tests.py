@@ -76,6 +76,10 @@ class TestApi(unittest.TestCase):
         r = self.ttr.get_unread_count()
         self.assertIsInstance(r, int)
 
+    def test_update_daemon_running(self):
+        r = self.ttr.update_daemon_running()
+        self.assertTrue(r)
+
 class TestCategories(unittest.TestCase):
     def setUp(self):
         self.ttr = get_ttr_client_nologin()
