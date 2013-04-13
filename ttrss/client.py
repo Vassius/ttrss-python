@@ -198,7 +198,8 @@ class TTRClient(object):
         """
         Get a list of articles from article ids.
 
-        :param article_id: A comma separated string of article ids to fetch.
+        :param article_id: A comma separated string or list of article ids to
+            fetch,
         """
         if isinstance(article_id, list):
             article_id = ",".join([str(i) for i in article_id])
