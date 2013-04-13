@@ -292,6 +292,11 @@ class TTRClient(object):
         r = self._get_json({'op': 'getConfig'})
         return int(r['content']['num_feeds'])
 
+    def update_daemon_running(self):
+        """Return ``True`` if update daemon is running, ``False`` otherwise."""
+        r = self._get_json({'op': 'getConfig'})
+        return r['content']['daemon_is_running']
+
 
 class RemoteObject(object):
     """
