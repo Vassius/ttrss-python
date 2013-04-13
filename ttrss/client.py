@@ -200,6 +200,8 @@ class TTRClient(object):
 
         :param article_id: A comma separated string of article ids to fetch.
         """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
         r = self._get_json({'op': 'getArticle', 'article_id': article_id})
         return [Article(article, self) for article in r['content']]
 
