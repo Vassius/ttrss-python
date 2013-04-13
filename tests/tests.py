@@ -175,7 +175,9 @@ class TestArticles(unittest.TestCase):
     def test_get_multiple_articles(self):
         h = self.headlines[-2:]
         a = self.ttr.get_articles("{0},{1}".format(h[0].id, h[1].id))
+        a2 = self.ttr.get_articles([h[0].id, h[1].id])
         self.assertTrue(len(a) == 2)
+        self.assertTrue(len(a2) == 2)
 
     def test_publish(self):
         self.assertIsInstance(self.a, list)
