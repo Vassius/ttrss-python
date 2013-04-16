@@ -297,6 +297,15 @@ class TTRClient(object):
         r = self._get_json({'op': 'getConfig'})
         return r['content']['daemon_is_running']
 
+    def subscribe(self, feed_url, category_id=0, login=None, password=None):
+        r = self._get_json({
+            'op': 'subscribeToFeed',
+            'feed_url': feed_url,
+            'category_id': category_id,
+            'login': login,
+            'password': password
+        })
+
 
 class RemoteObject(object):
     """
