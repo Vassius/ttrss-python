@@ -298,6 +298,14 @@ class TTRClient(object):
         return r['content']['daemon_is_running']
 
     def subscribe(self, feed_url, category_id=0, login=None, password=None):
+        """Subscribe to specified feed.
+
+        :param feed_url: URL to the feed to subscribe to.
+        :param category_id: Place feed in the category with this ID.
+        :param login: Login name for the feed, if any.
+        :param password: Password for the feed, if any.
+        """
+
         r = self._get_json({
             'op': 'subscribeToFeed',
             'feed_url': feed_url,
