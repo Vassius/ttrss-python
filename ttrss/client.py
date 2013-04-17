@@ -314,6 +314,14 @@ class TTRClient(object):
             'password': password
         })
 
+    def unsubscribe(self, feed_id):
+        """Unsubscribe to specified feed
+
+        :param feed_id: ID of feed to unsubscribe.
+        """
+
+        r = self._get_json({'op': 'unsubscribeFeed', 'feed_id': feed_id})
+
 
 class RemoteObject(object):
     """
