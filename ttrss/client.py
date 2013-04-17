@@ -254,8 +254,11 @@ class TTRClient(object):
         """
         Mark an article as read.
 
-        :param article_id: ID of article to mark as read.
+        :param article_id: List or comma separated string of IDs of articles
+            to mark as read.
         """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
         r = self._get_json({
             'op': 'updateArticle',
             'article_ids': article_id,
