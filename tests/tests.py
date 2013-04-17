@@ -132,7 +132,10 @@ class TestFeeds(unittest.TestCase):
 
     def test_feed_catchup(self):
         self.assertTrue(self.feed.unread > 0)
-        # TODO    
+        self.feed.catchup()
+        cat = self.ttr.get_categories()[-1]
+        feed = self.ttr.get_feeds(cat.id)[0]
+        self.assertTrue(feed.unread == 0)
 
     def test_get_num_feeds(self):
         n = self.ttr.get_feed_count()
@@ -152,6 +155,10 @@ class TestFeeds(unittest.TestCase):
         self.ttr.unsubscribe(unsubscribe_id)
         f = self.ttr.get_feeds(cat_id=0)
         self.assertFalse(u'https://github.com/Vassius.atom' in [feed.feed_url for feed in f])
+
+    def tearDown(self):
+        h = self.feed.headlines()[-1]
+        self.ttr.mark_unread(h.id)
 
 
 class TestHeadlines(unittest.TestCase):
