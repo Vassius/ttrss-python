@@ -138,6 +138,21 @@ class TestFeeds(unittest.TestCase):
         n = self.ttr.get_feed_count()
         self.assertTrue(n > 0)
 
+    def test_subscribe_unsubscribe(self):
+        f = self.ttr.get_feeds(cat_id=0)
+        self.assertFalse(u'https://github.com/Vassius.atom' in [feed.feed_url for feed in f])
+        self.ttr.subscribe(u'https://github.com/Vassius.atom')
+        f = self.ttr.get_feeds(cat_id=0)
+        self.assertTrue(u'https://github.com/Vassius.atom' in [feed.feed_url for feed in f])
+        unsubscribe_id = None
+        for feed in f:
+            if feed.feed_url == u'https://github.com/Vassius.atom':
+                unsubscribe_id = feed.id
+                break
+        self.ttr.unsubscribe(unsubscribe_id)
+        f = self.ttr.get_feeds(cat_id=0)
+        self.assertFalse(u'https://github.com/Vassius.atom' in [feed.feed_url for feed in f])
+
 
 class TestHeadlines(unittest.TestCase):
     def setUp(self):
