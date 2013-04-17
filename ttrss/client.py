@@ -271,8 +271,11 @@ class TTRClient(object):
         """
         Toggle the unread status of an article.
 
-        :param article_id: ID of the article to toggle.
+        :param article_id: List or comma separated string of IDs of articles
+            to toggle unread.
         """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
         r = self._get_json({
             'op': 'updateArticle',
             'article_ids': article_id,
