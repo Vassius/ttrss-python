@@ -29,7 +29,7 @@ More detailed documentation can be found at https://ttrss-python.readthedocs.org
 
 Development
 ===========
-ttrss-python is still in early development and far from feature complete. But if there's a specific feature
+ttrss-python is still in early development and not yet feature complete. If there's a specific feature
 you'd like me to prioritize, feel free to submit an issue or a pull request. 
 
 The source code is available at https://github.com/Vassius/ttrss-python
