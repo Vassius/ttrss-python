@@ -10,7 +10,7 @@ setup(
         long_description=long_desc,
         url='https://github.com/Vassius/ttrss-python',
         author='Markus Wiik',
-        author_email='markus.wiik@gmail.com',
+        author_email='vassius@gmail.com',
         packages=['ttrss'],
         package_data={'': ['README.rst']},
         include_package_data=True,
