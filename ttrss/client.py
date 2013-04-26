@@ -144,6 +144,10 @@ class TTRClient(object):
         })
         return [Feed(feed, self) for feed in r['content']]
 
+    def get_labels(self):
+        r = self._get_json({'op': 'getLabels'})
+        return [Label(label, self) for label in r['content']]
+
     def get_headlines(
             self,
             feed_id=-4,
