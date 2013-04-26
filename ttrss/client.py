@@ -149,6 +149,14 @@ class TTRClient(object):
         r = self._get_json({'op': 'getLabels'})
         return [Label(label, self) for label in r['content']]
 
+    def get_headlines_for_label(self, label_id, **kwargs):
+        """
+        Get headlines for specified label id. Supports the same kwargs
+            as ``get_headlines``, except for ``feed_id`` of course.
+        """
+        feed_id = -11 - int(label_id)
+        return self.get_headlines(feed_id=feed_id, **kwargs)
+
     def get_headlines(
             self,
             feed_id=-4,
