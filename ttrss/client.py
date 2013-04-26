@@ -413,6 +413,13 @@ class Label(RemoteObject):
     def __init__(self, attr, client):
         super(Label, self).__init__(attr, client)
 
+    def headlines(self, **kwargs):
+        """
+        Get a list of headlines for this label. Supports the same kwargs as
+            ``Feed.headlines()``
+        """
+        return self._client.get_headlines_for_label(self.id)
+
 
 class Headline(RemoteObject):
     """This class represents Headline objects. A headline is a short version
