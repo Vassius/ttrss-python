@@ -145,6 +145,7 @@ class TTRClient(object):
         return [Feed(feed, self) for feed in r['content']]
 
     def get_labels(self):
+        """Get a list of configured labels"""
         r = self._get_json({'op': 'getLabels'})
         return [Label(label, self) for label in r['content']]
 
