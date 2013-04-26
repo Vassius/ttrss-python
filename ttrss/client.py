@@ -396,6 +396,11 @@ class Feed(RemoteObject):
         return self._client.get_headlines(feed_id=self.id, **kwargs)
 
 
+class Label(RemoteObject):
+    def __init__(self, attr, client):
+        super(Label, self).__init__(attr, client)
+
+
 class Headline(RemoteObject):
     """This class represents Headline objects. A headline is a short version
         of an article.
