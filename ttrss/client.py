@@ -344,6 +344,10 @@ class TTRClient(object):
 
         r = self._get_json({'op': 'unsubscribeFeed', 'feed_id': feed_id})
 
+    def get_pref(self, pref_name):
+        r = self._get_json({'op': 'getPref', 'pref_name': pref_name})
+        return r['content']['value']
+
 
 class RemoteObject(object):
     """
