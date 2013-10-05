@@ -74,7 +74,7 @@ class TTRClient(object):
         data.update(post_data)
         r = self._session.post(self.url, data=json.dumps(data))
         raise_on_error(r)
-        return json.loads(r.content)
+        return json.loads(r.text)
 
     def get_unread_count(self):
         """Get total number of unread articles"""

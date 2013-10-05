@@ -35,7 +35,7 @@ class TestRSSService(unittest.TestCase):
         self.s.user
         self.s.password
         r = requests.post(self.s.url, data=json.dumps({'op': 'login', 'user': self.s.user, 'password': self.s.password}))
-        data = json.loads(r.content)
+        data = json.loads(r.text)
         self.assertTrue(data['status'] == 0)
 
 class TestApi(unittest.TestCase):

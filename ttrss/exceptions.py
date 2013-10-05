@@ -14,7 +14,7 @@ class TTRApiDisabled(Exception):
 
 
 def raise_on_error(r):
-    j = json.loads(r.content)
+    j = json.loads(r.text)
     if int(j['status']) == 0:
         return
 

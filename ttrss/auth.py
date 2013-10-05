@@ -11,7 +11,7 @@ class TTRAuth(AuthBase):
         self.sid = None
 
     def response_hook(self, r, **kwargs):
-        j = json.loads(r.content)
+        j = json.loads(r.text)
         if int(j['status']) == 0:
             return r
 
@@ -49,5 +49,5 @@ class TTRAuth(AuthBase):
             'password': self.password
         }))
         raise_on_error(res)
-        j = json.loads(res.content)
+        j = json.loads(res.text)
         return j['content']['session_id']
