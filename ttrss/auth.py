@@ -1,7 +1,7 @@
 from requests.auth import AuthBase
 import requests
 import json
-from exceptions import raise_on_error
+from ttrss.exceptions import raise_on_error
 
 
 class TTRAuth(AuthBase):

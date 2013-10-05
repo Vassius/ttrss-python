@@ -1,8 +1,8 @@
 from datetime import datetime
 import requests
 import json
-from auth import TTRAuth
-from exceptions import raise_on_error
+from ttrss.auth import TTRAuth
+from ttrss.exceptions import raise_on_error
 
 
 class TTRClient(object):
