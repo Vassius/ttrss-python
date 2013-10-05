@@ -5,6 +5,7 @@ Have you ever wanted to write a python application to interface with your Tiny T
 
 At a glance
 ===========
+Now with Python 3 support!
 
 Getting started is easy! Just type ``pip install ttrss-python`` in the virtualenv of your choice. 
 
