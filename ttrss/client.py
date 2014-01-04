@@ -247,6 +247,22 @@ class TTRClient(object):
             'content': content
         })
 
+    def assign_label(self, article_id, label_id):
+        """
+        Assign an existing label to an article.
+
+        :param article_id: Article ID.
+        :param label_id: Label ID.
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'setArticleLabel',
+            'article_ids': article_id,
+            'label_id': label_id,
+            'assign': 'true',
+        })
+
     def mark_unread(self, article_id):
         """
         Mark an article as unread.
