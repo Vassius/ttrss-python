@@ -144,6 +144,19 @@ class TTRClient(object):
         })
         return [Feed(feed, self) for feed in r['content']]
 
+    def get_feed_tree(self, include_empty=False):
+        """
+        Get entire feed tree as decoded json data.
+
+        :param include_empty: *Optional* Include empty categories. Default is
+            ``False``.
+        """
+        r = self._get_json({
+            'op': 'getFeedTree',
+            'include_empty': include_empty,
+        })
+        return r['content']
+
     def get_labels(self):
         """Get a list of configured labels"""
         r = self._get_json({'op': 'getLabels'})
