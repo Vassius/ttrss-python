@@ -14,7 +14,7 @@ class TTRClient(object):
     represented by Python objects.  You can also update modify articles and
     feeds on the server.
     """
-    def __init__(self, url, user=None, password=None, auto_login=False):
+    def __init__(self, url, user=None, password=None, auto_login=False, http_auth=()):
         """
         Instantiate a new client.
 
@@ -30,11 +30,12 @@ class TTRClient(object):
         self.url = url + '/api/'
         self.user = user
         self.password = password
+        self.http_auth = http_auth
 
         self._session = requests.Session()
 
         if auto_login:
-            auth = TTRAuth(user, password)
+            auth = TTRAuth(user, password, http_auth)
             self._session.auth = auth
 
     def login(self):
@@ -72,7 +73,7 @@ class TTRClient(object):
         else:
             data = {'sid': self.sid}
         data.update(post_data)
-        r = self._session.post(self.url, data=json.dumps(data))
+        r = self._session.post(self.url, auth=self.http_auth, data=json.dumps(data))
         raise_on_error(r)
         return json.loads(r.text)
 
