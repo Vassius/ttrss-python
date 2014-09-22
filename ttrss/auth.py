@@ -5,9 +5,10 @@ from ttrss.exceptions import raise_on_error
 
 
 class TTRAuth(AuthBase):
-    def __init__(self, user, password):
+    def __init__(self, user, password, http_auth):
         self.user = user
         self.password = password
+        self.http_auth = http_auth
         self.sid = None
 
     def response_hook(self, r, **kwargs):
@@ -20,7 +21,7 @@ class TTRAuth(AuthBase):
         r.request.deregister_hook('response', self.response_hook)
         j = json.loads(r.request.body)
         j.update({'sid': self.sid})
-        req = requests.Request('POST', r.request.url)
+        req = requests.Request('POST', r.request.url, auth=self.http_auth)
         req.data = json.dumps(j)
         _r = requests.Session().send(req.prepare())
         raise_on_error(_r)
@@ -35,7 +36,7 @@ class TTRAuth(AuthBase):
             if self.sid is None:
                 self.sid = self._get_sid(r.url)
             data.update({'sid': self.sid})
-            req = requests.Request('POST', r.url)
+            req = requests.Request('POST', r.url, auth=self.http_auth)
             req.data = json.dumps(data)
             return req.prepare()
         else:
@@ -43,7 +44,7 @@ class TTRAuth(AuthBase):
         return r
 
     def _get_sid(self, url):
-        res = requests.post(url, data=json.dumps({
+        res = requests.post(url, auth=self.http_auth, data=json.dumps({
             'op': 'login',
             'user': self.user,
             'password': self.password

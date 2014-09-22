@@ -46,6 +46,10 @@ response hook to check every server response for a ``NOT_LOGGED_IN`` message::
 
     >>> client = TTRClient('http://url-to-tiny-tiny', 'username', 'super-secret-password', auto_login=True)
 
+If the URL has http authentication on top of ttrss authentication, it can be specified using the ``http_auth`` parameter::
+
+    >>> client = TTRClient('http://url-to-tiny-tiny', 'username', 'super-secret-password', http_auth=('http_username', 'http_password'))
+
 Refer to the API docs for details on how to retrieve objects from the server.
 
 Categories
