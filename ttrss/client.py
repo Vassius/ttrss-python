@@ -86,7 +86,7 @@ class TTRClient(object):
         """Get total number of subscribed feeds."""
         r = self._get_json({'op': 'getCounters'})
         for c in r['content']:
-            if c['id'] == u'subscribed-feeds':
+            if c['id'] == 'subscribed-feeds':
                 return int(c['counter'])
         return None
 
@@ -348,6 +348,17 @@ class TTRClient(object):
         """Return ``True`` if update daemon is running, ``False`` otherwise."""
         r = self._get_json({'op': 'getConfig'})
         return r['content']['daemon_is_running']
+
+    def update_feed(self, feed_id):
+        """
+		Update specified feed
+		:param feed_id: id of the feed to update.
+ 
+		"""
+        r = self._get_json({
+			'op': 'updateFeed',
+            'feed_id': feed_id
+		})
 
     def subscribe(self, feed_url, category_id=0, login=None, password=None):
         """Subscribe to specified feed.
