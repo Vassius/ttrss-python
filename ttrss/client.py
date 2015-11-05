@@ -182,7 +182,8 @@ class TTRClient(object):
             view_mode=None,
             include_attachments=False,
             since_id=None,
-            include_nested=True):
+            include_nested=True,
+            order_by=None):
 
         """
         Get a list of headlines from a specified feed.
@@ -205,6 +206,9 @@ class TTRClient(object):
         :param since_id: Only include headlines newer than ``since_id``.
         :param include_nested: Include articles from child categories.
             Defaults to ``True``.
+        :param order_by: Change the sort order. The default (``None``) sorts 
+            the newest items first. Alternative values are `"date_reverse"`, 
+            oldest first, and `"feed_dates"`, newest first ordered by feed date.
         """
         r = self._get_json({
             'op': 'getHeadlines',
@@ -218,6 +222,7 @@ class TTRClient(object):
             'include_attachments': include_attachments,
             'since_id': since_id,
             'include_nested': include_nested,
+            'order_by': order_by,
         })
         return [Headline(hl, self) for hl in r['content']]
 
