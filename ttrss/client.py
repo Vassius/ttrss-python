@@ -171,7 +171,7 @@ class TTRClient(object):
         feed_id = -11 - int(label_id)
         return self.get_headlines(feed_id=feed_id, **kwargs)
 
-        def get_headlines(
+    def get_headlines(
             self,
             feed_id=-4,
             limit=0,
