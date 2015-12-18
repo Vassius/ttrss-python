@@ -171,7 +171,7 @@ class TTRClient(object):
         feed_id = -11 - int(label_id)
         return self.get_headlines(feed_id=feed_id, **kwargs)
 
-    def get_headlines(
+        def get_headlines(
             self,
             feed_id=-4,
             limit=0,
@@ -183,6 +183,7 @@ class TTRClient(object):
             include_attachments=False,
             since_id=None,
             include_nested=True,
+            order_by=None,
             excerpt_length=200):
 
         """
@@ -206,6 +207,9 @@ class TTRClient(object):
         :param since_id: Only include headlines newer than ``since_id``.
         :param include_nested: Include articles from child categories.
             Defaults to ``True``.
+        :param order_by: Change the sort order. The default (``None``) sorts 
+            the newest items first. Alternative values are `"date_reverse"`, 
+            oldest first, and `"feed_dates"`, newest first ordered by feed date.
         :excerpt_length: Length of the except in character.
             Defaults is ``200``.
         """
@@ -221,6 +225,7 @@ class TTRClient(object):
             'include_attachments': include_attachments,
             'since_id': since_id,
             'include_nested': include_nested,
+            'order_by': order_by,
             'excerpt_length': excerpt_length,
         })
         return [Headline(hl, self) for hl in r['content']]
