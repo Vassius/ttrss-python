@@ -183,7 +183,8 @@ class TTRClient(object):
             include_attachments=False,
             since_id=None,
             include_nested=True,
-            order_by=None):
+            order_by=None,
+            excerpt_length=200):
 
         """
         Get a list of headlines from a specified feed.
@@ -209,6 +210,8 @@ class TTRClient(object):
         :param order_by: Change the sort order. The default (``None``) sorts 
             the newest items first. Alternative values are `"date_reverse"`, 
             oldest first, and `"feed_dates"`, newest first ordered by feed date.
+        :excerpt_length: Length of the except in character.
+            Defaults is ``200``.
         """
         r = self._get_json({
             'op': 'getHeadlines',
@@ -223,6 +226,7 @@ class TTRClient(object):
             'since_id': since_id,
             'include_nested': include_nested,
             'order_by': order_by,
+            'excerpt_length': excerpt_length,
         })
         return [Headline(hl, self) for hl in r['content']]
 
