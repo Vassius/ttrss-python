@@ -319,6 +319,72 @@ class TTRClient(object):
         })
         pass
 
+    def set_note(self, article_id, note):
+        """
+        Set the note text of an article.
+
+        :param article_id: List or comma-separated string of IDs of articles
+            to set the note text of.
+        :param note: The text of the note
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 3,
+            'data': note,
+        })
+
+    def set_score(self, article_id, score):
+        """
+        Set the score of an article.
+
+        :param article_id: List or comma-separated string of IDs of articles
+            of which the score is set.
+        :param score: The numeric value of the score
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 4,
+            'data': score,
+        })
+
+    def mark_starred(self, article_id):
+        """
+        Mark the article as starred.
+
+        :param article_id: List or comma-separated string of IDs of articles
+            to mark as starred.
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 0,
+        })
+
+    def toggle_starred(self, article_id):
+        """
+        Toggle the starred status of an article.
+
+        :param article_id: List or comma separated string of IDs of articles
+            to toggle starred status.
+        """
+        r= self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 2,
+            'field': 0})
+
+
     def toggle_unread(self, article_id):
         """
         Toggle the unread status of an article.
