@@ -182,9 +182,7 @@ class TTRClient(object):
             view_mode=None,
             include_attachments=False,
             since_id=None,
-            include_nested=True,
-            order_by=None,
-            excerpt_length=200):
+            include_nested=True):
 
         """
         Get a list of headlines from a specified feed.
@@ -207,11 +205,6 @@ class TTRClient(object):
         :param since_id: Only include headlines newer than ``since_id``.
         :param include_nested: Include articles from child categories.
             Defaults to ``True``.
-        :param order_by: Change the sort order. The default (``None``) sorts 
-            the newest items first. Alternative values are `"date_reverse"`, 
-            oldest first, and `"feed_dates"`, newest first ordered by feed date.
-        :excerpt_length: Length of the except in character.
-            Defaults is ``200``.
         """
         r = self._get_json({
             'op': 'getHeadlines',
@@ -222,11 +215,9 @@ class TTRClient(object):
             'show_excerpt': show_excerpt,
             'show_content': show_content,
             'view_mode': view_mode,
-            'include_attachments': include_attachments,
+            'include_attachments': include_attachments, 'order_by': 'date_reverse',
             'since_id': since_id,
             'include_nested': include_nested,
-            'order_by': order_by,
-            'excerpt_length': excerpt_length,
         })
         return [Headline(hl, self) for hl in r['content']]
 
@@ -318,6 +309,72 @@ class TTRClient(object):
             'field': 2
         })
         pass
+
+    def set_note(self, article_id, note):
+        """
+        Set the note text of an article.
+
+        :param article_id: List or comma-separated string of IDs of articles
+            to set the note text of.
+        :param note: The text of the note
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 3,
+            'data': note,
+        })
+
+    def set_score(self, article_id, score):
+        """
+        Set the score of an article.
+
+        :param article_id: List or comma-separated string of IDs of articles
+            of which the score is set.
+        :param score: The numeric value of the score
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 4,
+            'data': score,
+        })
+
+    def mark_starred(self, article_id):
+        """
+        Mark the article as starred.
+
+        :param article_id: List or comma-separated string of IDs of articles
+            to mark as starred.
+        """
+        if isinstance(article_id, list):
+            article_id = ",".join([str(i) for i in article_id])
+        r = self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 1,
+            'field': 0,
+        })
+
+    def toggle_starred(self, article_id):
+        """
+        Toggle the starred status of an article.
+
+        :param article_id: List or comma separated string of IDs of articles
+            to toggle starred status.
+        """
+        r= self._get_json({
+            'op': 'updateArticle',
+            'article_ids': article_id,
+            'mode': 2,
+            'field': 0})
+
 
     def toggle_unread(self, article_id):
         """
